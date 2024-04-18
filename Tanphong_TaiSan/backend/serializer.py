@@ -19,15 +19,15 @@ class HopDongDichVuSerializer(serializers.ModelSerializer):
 
 class LoaiDichVuSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HopdongDichvu
+        model = Loaidichvu
         fields = "__all__"
 
 class TaiSanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HopdongDichvu
+        model = Taisan
         fields = "__all__"
 
 class LoaiTaiSanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HopdongDichvu
+        model = Loaitaisan
         fields = "__all__"

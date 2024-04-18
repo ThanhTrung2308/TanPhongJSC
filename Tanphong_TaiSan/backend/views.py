@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from .models import *
-from serializer import *
+from .serializer import *
 
 def index(request):
     return HttpResponse("hello world")

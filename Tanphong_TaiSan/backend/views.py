@@ -1,7 +1,15 @@
-from rest_framework.decorators import api_view
-from .models import *
-from .serializer import *
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.db import connection
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import generics, mixins
+from .models import *
+from serializer import *
+
+def index(request):
+    return HttpResponse("hello world")
 
 # Create your views here.
 class HopDongAPIView(generics.GenericAPIView,
@@ -148,3 +156,4 @@ class LoaiTaiSanAPIView(generics.GenericAPIView,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+

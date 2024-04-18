@@ -11,3 +11,23 @@ class DichVuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dichvu
         fields = "__all__"
+    
+class HopDongDichVuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HopdongDichvu
+        fields = "__all__"
+
+class LoaiDichVuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HopdongDichvu
+        fields = "__all__"
+
+class TaiSanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HopdongDichvu
+        fields = "__all__"
+
+class LoaiTaiSanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HopdongDichvu
+        fields = "__all__"

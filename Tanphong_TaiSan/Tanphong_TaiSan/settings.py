@@ -131,6 +131,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['tanphong.onrender.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://tanphong.onrender.com']
+ALLOWED_HOSTS = ['tanphongjsc.onrender.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://tanphongjsc.onrender.com']
 CORS_ALLOW_ALL_ORIGINS = True

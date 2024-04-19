@@ -132,7 +132,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = ['tanphongjsc.onrender.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://tanphongjsc.onrender.com', 'https://tanphong-board.vercel.app/storage']
+CSRF_TRUSTED_ORIGINS = ['https://tanphongjsc.onrender.com', 'https://tanphong-board.vercel.app']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

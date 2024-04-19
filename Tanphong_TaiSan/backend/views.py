@@ -22,6 +22,9 @@ class HopDongAPIView(generics.GenericAPIView,
     serializer_class = HopDongSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -47,6 +50,9 @@ class DichVuAPIView(generics.GenericAPIView,
     serializer_class = DichVuSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -71,6 +77,9 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
     serializer_class = HopDongDichVuSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -95,6 +104,9 @@ class LoaiDichVuAPIView(generics.GenericAPIView,
     serializer_class = LoaiDichVuSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -119,6 +131,9 @@ class TaiSanAPIView(generics.GenericAPIView,
     serializer_class = TaiSanSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -143,17 +158,47 @@ class LoaiTaiSanAPIView(generics.GenericAPIView,
     serializer_class = LoaiTaiSanSerializer
 
     def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+    
 
+class KheUocVayAPIView(generics.GenericAPIView,
+                     generics.mixins.ListModelMixin,
+                     generics.mixins.CreateModelMixin,
+                     generics.mixins.RetrieveModelMixin,
+                     generics.mixins.UpdateModelMixin,
+                     generics.mixins.DestroyModelMixin):
+    queryset = Kheuocvay.objects.all()
+    serializer_class = KheUocVaySerializer
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

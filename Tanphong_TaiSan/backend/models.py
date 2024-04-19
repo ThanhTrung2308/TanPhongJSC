@@ -37,6 +37,7 @@ class Dichvu(models.Model):
     id_loaidichvu = models.ForeignKey('Loaidichvu', models.DO_NOTHING, db_column='Id_LoaiDichVu')  # Field name made lowercase.
     tendichvu = models.CharField(db_column='TenDichVu', max_length=200, blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -74,7 +75,8 @@ class Hopdong(models.Model):
     kythanhtoan_thang_lan_field = models.BigIntegerField(db_column='KyThanhToan(thang/lan)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
     tongthu = models.FloatField(db_column='TongThu', blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.
-
+    ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
+    
     class Meta:
         managed = False
         db_table = 'HopDong'

@@ -1,27 +1,11 @@
 from rest_framework import serializers
 from .models import *
 
-# class HopDongCreateSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Hopdong
-#         fields = [
-#             "ten",
-#             "sohd",
-#             "thoigianthue",
-#             "kythanhtoan_thang_lan_field",
-#             "tongthu",
-#             "chuthich",
-#             "ngayghi"
-#         ]
 
 class HopDongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hopdong
         fields = "__all__"
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #     #validated_data.pop("id_hopdong")
-    #     return Hopdong.objects.create(**validated_data)
 
 class DichVuSerializer(serializers.ModelSerializer):
     class Meta:

@@ -43,8 +43,8 @@ class HopDongAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -71,8 +71,8 @@ class DichVuAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -98,8 +98,8 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -125,8 +125,8 @@ class LoaiDichVuAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -152,8 +152,8 @@ class TaiSanAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)

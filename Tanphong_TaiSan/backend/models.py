@@ -37,7 +37,7 @@ class Dichvu(models.Model):
     id_loaidichvu = models.ForeignKey('Loaidichvu', models.DO_NOTHING, db_column='Id_LoaiDichVu')  # Field name made lowercase.
     tendichvu = models.CharField(db_column='TenDichVu', max_length=200, blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
+    ngayghi = models.DateTimeField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -75,7 +75,7 @@ class Hopdong(models.Model):
     kythanhtoan_thang_lan_field = models.BigIntegerField(db_column='KyThanhToan(thang/lan)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
     tongthu = models.FloatField(db_column='TongThu', blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
+    ngayghi = models.DateTimeField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
     
     class Meta:
         managed = False
@@ -116,7 +116,7 @@ class Kheuocvay(models.Model):
     tenkheuoc = models.CharField(db_column='TenKheUoc', max_length=200)  # Field name made lowercase.
     sotienvay = models.FloatField(db_column='SoTienVay', blank=True, null=True)  # Field name made lowercase.
     laisuat_nam = models.FloatField(db_column='LaiSuat/Nam', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    ngayvay = models.DateField(db_column='NgayVay', blank=True, null=True)  # Field name made lowercase.
+    ngayvay = models.DateTimeField(db_column='NgayVay', blank=True, null=True)  # Field name made lowercase.
     thoigianvay = models.CharField(db_column='ThoiGianVay', max_length=200, blank=True, null=True)  # Field name made lowercase.
     hinhthuctravay = models.CharField(db_column='HinhThucTraVay', max_length=200, blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.
@@ -217,7 +217,7 @@ class Taisan(models.Model):
     id_taisan = models.BigAutoField(db_column='Id_TaiSan', primary_key=True)  # Field name made lowercase.
     id_loaitaisan = models.ForeignKey(Loaitaisan, models.DO_NOTHING, db_column='Id_LoaiTaiSan')  # Field name made lowercase.
     tentaisan = models.CharField(db_column='TenTaiSan', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    ngayghitang = models.DateField(db_column='NgayGhiTang', blank=True, null=True)  # Field name made lowercase.
+    ngayghitang = models.DateTimeField(db_column='NgayGhiTang', blank=True, null=True)  # Field name made lowercase.
     thoigiansudung = models.CharField(db_column='ThoiGianSuDung', max_length=200, blank=True, null=True)  # Field name made lowercase.
     nguyengia = models.FloatField(db_column='NguyenGia', blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=200, blank=True, null=True)  # Field name made lowercase.

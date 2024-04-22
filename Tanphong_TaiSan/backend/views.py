@@ -62,6 +62,11 @@ class DichVuAPIView(generics.GenericAPIView,
     queryset = Dichvu.objects.all()
     serializer_class = DichVuSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get('data'), list):
+            kwargs['many'] = True
+        return super().get_serializer(*args, **kwargs)
+    
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if pk is not None:
@@ -148,6 +153,11 @@ class TaiSanAPIView(generics.GenericAPIView,
     queryset = Taisan.objects.all()
     serializer_class = TaiSanSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get('data'), list):
+            kwargs['many'] = True
+        return super().get_serializer(*args, **kwargs)  
+    
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if pk is not None:

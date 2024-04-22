@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('hopdong',views.HopDongAPIView.as_view(),name = 'hopdong-list-create'),
+    path('hopdong/',views.HopDongAPIView.as_view(),name = 'hopdong-list-create'),
     path('hopdong/<int:pk>',views.HopDongAPIView.as_view(),name = 'hopdong-update'),
     path('hopdong/<int:pk>',views.HopDongAPIView.as_view(),name = 'hopdong-delete'),
     path('hopdong/<int:pk>',views.HopDongAPIView.as_view(),name = 'hopdong-retrieve'),

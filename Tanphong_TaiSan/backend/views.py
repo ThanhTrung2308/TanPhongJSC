@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import connection
 from rest_framework import status
-
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
@@ -111,8 +111,30 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
     # def retrieve(self, request, *args, **kwargs):
     #     return self.retrieve(request, *args, **kwargs)
 
+    # def put(self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)
+    
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        data = request.data
+
+        # Lặp qua từng record trong dữ liệu yêu cầu để cập nhật hoặc tạo mới
+        for item in data:
+            id_hopdongdichvu = item.get('id_hopdongdichvu')
+
+        # Kiểm tra xem id_hopdongdichvu có tồn tại hay không
+            try:
+                hopdongdichvu = HopdongDichvu.objects.get(id_hopdongdichvu=id_hopdongdichvu)
+            except HopdongDichvu.DoesNotExist:
+                return Response({'error': f'id_hopdongdichvu {id_hopdongdichvu} not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Cập nhật dữ liệu từ yêu cầu
+            serializer = self.get_serializer(hopdongdichvu, data=item, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response("Cập nhật dữ liệu thành công")
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

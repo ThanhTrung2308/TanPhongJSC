@@ -39,6 +39,9 @@ urlpatterns = [
     path('hopdongdichvu/<int:pk>/',views.HopDongDichVuAPIView.as_view(),name = 'hopdongdichvu-retrieve'),
     path('hopdongdichvu/<int:pk>',views.HopDongDichVuAPIView.as_view(),name = 'hopdongdichvu-retrieve'),
 
+    path('hopdongdichvu/update/',views.HopDongDichVuAPIView.as_view(),name = 'hopdongdichvu-update-many'),
+    path('hopdongdichvu/update',views.HopDongDichVuAPIView.as_view(),name = 'hopdongdichvu-update-many'),
+
     path('loaidichvu/',views.LoaiDichVuAPIView.as_view(),name = 'loaidichvu-list-create'),
     path('loaidichvu',views.LoaiDichVuAPIView.as_view(),name = 'loaidichvu-list-create'),
 

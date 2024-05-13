@@ -50,5 +50,11 @@ class ThanhToanSerializer(serializers.ModelSerializer):
         model = Thanhtoan
         fields = "__all__"
         extra_kwargs = {
-            'id': {'read_only': False}
+            'id': {'read_only': False, 'required': False}
         }
+
+    def create(self, validated_data): 
+        validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
+        validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
+        validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
+        return super().create(validated_data)

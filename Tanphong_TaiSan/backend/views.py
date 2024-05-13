@@ -328,6 +328,12 @@ class ThanhToanMixinsView(
 
     def delete(self, request, *args, **kwargs):
         self.destroy(request, *args, **kwargs)
-    
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+
+    # def perform_create(self, serializer):
+    #     TienTruocThue = serializer.validated_data.get("tientruocthue")
+    #     Thue = serializer.validated_data.get("thue")
+    #     TienSauThue = serializer.validated_data.get("tiensauthue")
+
+    #     if TienTruocThue is None:
+    #         TienTruocThue = 
+    #     return super().perform_create(serializer)

@@ -68,7 +68,7 @@ class Donhang(models.Model):
 
 
 class Hopdong(models.Model):
-    id_hopdong = models.BigIntegerField(db_column='Id_HopDong', primary_key=True)  # Field name made lowercase.
+    id_hopdong = models.BigAutoField(db_column='Id_HopDong', primary_key=True)  # Field name made lowercase.
     ten = models.CharField(db_column='Ten', max_length=100, blank=True, null=True)  # Field name made lowercase.
     sohd = models.CharField(db_column='SoHD', max_length=100, blank=True, null=True)  # Field name made lowercase.
     thoigianthue = models.BigIntegerField(db_column='ThoiGianThue', blank=True, null=True)  # Field name made lowercase.
@@ -98,9 +98,9 @@ class HopdongDichvu(models.Model):
 class HopdongThanhtoan(models.Model):
     ngay = models.DateField(db_column='Ngay')  # Field name made lowercase.
     id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True)  # Field name made lowercase.
-    id_tbdv = models.CharField(db_column='Id_tbdv', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    id_dntt = models.CharField(db_column='Id_dntt', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    sodntt = models.CharField(db_column='SoDNTT', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    id = models.BigIntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    sotbdv = models.CharField(db_column='SoTBDV', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -242,7 +242,7 @@ class Taisan(models.Model):
 
 class Thanhtoan(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    id_thanhtoan = models.ForeignKey(HopdongThanhtoan, models.DO_NOTHING, db_column='Id_ThanhToan', blank=True, null=True)  # Field name made lowercase.
+    id_hopdongthanhtoan = models.ForeignKey(HopdongThanhtoan, models.DO_NOTHING, db_column='Id_HopDongThanhToan', blank=True, null=True)  # Field name made lowercase.
     dichvu = models.CharField(db_column='DichVu', max_length=100, blank=True, null=True)  # Field name made lowercase.
     tientruocthue = models.BigIntegerField(db_column='TienTruocThue', blank=True, null=True)  # Field name made lowercase.
     thue = models.BigIntegerField(db_column='Thue', blank=True, null=True)  # Field name made lowercase.
@@ -267,4 +267,3 @@ class TuybienChiphi(models.Model):
     class Meta:
         managed = False
         db_table = 'TuyBien_ChiPhi'
-

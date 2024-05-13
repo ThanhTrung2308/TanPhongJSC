@@ -311,7 +311,7 @@ class ThanhToanMixinsView(
         if serializer_thanhtoan.is_valid():
             thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
             Thanhtoan.objects.bulk_update(objs= thanhtoan_obj, fields=[
-                'id_thanhtoan',
+                'id_hopdongthanhtoan',
                 'dichvu',
                 'tientruocthue',
                 'thue',
@@ -328,3 +328,6 @@ class ThanhToanMixinsView(
 
     def delete(self, request, *args, **kwargs):
         self.destroy(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)

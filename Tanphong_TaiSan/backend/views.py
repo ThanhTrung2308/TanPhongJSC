@@ -110,7 +110,6 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
     
     def put(self, request, *args, **kwargs):
         data = request.data
-        
         update_data = []
         create_data = []
         for item in data:
@@ -118,44 +117,29 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
                 update_data.append(item)
             else:
                 create_data.append(item)
+        
+        # Update data
+        serializer_hopdongdichvu = self.get_serializer(data = update_data)
+        if serializer_hopdongdichvu.is_valid():
+            hopdongdichvu_obj = [HopdongDichvu(**data) for data in serializer_hopdongdichvu.validated_data]
+            HopdongDichvu.objects.bulk_update(objs=hopdongdichvu_obj, fields=[
+                'id_hopdong',
+                'dientich_soluong',
+                'dongia',
+                'chuthich',
+            ])
+        
+        else: return Response(serializer_hopdongdichvu.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Lặp qua từng record trong dữ liệu yêu cầu để cập nhật hoặc tạo mới
-        for item in update_data:
-            hopdongdichvu = HopdongDichvu.objects.get(id_hopdongdichvu=item['id_hopdongdichvu'])
+        # Create Data
+        if create_data:
+            serializer_hopdongdichvu = self.get_serializer(data=create_data, many=True)
+            if serializer_hopdongdichvu.is_valid():
+                serializer_hopdongdichvu.save()
+            else: return Response(serializer_hopdongdichvu.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Cập nhật dữ liệu từ yêu cầu
-            serializer = self.get_serializer(hopdongdichvu, data=item, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Cập nhật dữ liệu thành công", status=status.HTTP_200_OK)
 
-        serializer = self.get_serializer(data=create_data)
-        if serializer.is_valid():
-            serializer.save()
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
-        return Response("Cập nhật dữ liệu thành công")
-    
-    # def put(self, request, *args, **kwargs):
-    #     data = request.data
-
-    #     update_data = []
-    #     create_data = []
-    #     for item in data:
-    #         if 'id_hopdongdichvu' in item:
-    #             update_data.append(item)
-    #         else:
-    #             create_data.append(item)
-    #     print(update_data)
-
-    #     hopdongdichvu = self.queryset.filter(id_hopdongdichvu__in=[item['id_hopdongdichvu'] for item in update_data])
-    #     serializer = HopDongDichVuSerializer(hopdongdichvu, data=request.data, partial=True, many=True)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-
-    #     return Response("Cập nhật dữ liệu thành công")
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
@@ -265,11 +249,82 @@ class KheUocVayAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+class HopDongThanhToanMixinsView(
+    generics.GenericAPIView,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin
+):
+    queryset = HopdongThanhtoan.objects.all()
+    serializer_class = HopDongThanhToanSerializer
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.get("pk") is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class ThanhToanMixinsView(
+    generics.GenericAPIView,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin
+):
+    queryset = Thanhtoan.objects.all()
+    serializer_class = ThanhToanSerializer
+    # lookup_field = 'id'
+
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get("data"), list):
+            kwargs['many'] = True
+        return super().get_serializer(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.get("pk") is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        serializer_thanhtoan = self.get_serializer(data = request.data)
+        if serializer_thanhtoan.is_valid():
+            thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
+            Thanhtoan.objects.bulk_update(objs= thanhtoan_obj, fields=[
+                'id_thanhtoan',
+                'dichvu',
+                'tientruocthue',
+                'thue',
+                'tiensauthue',
+                'donvitinh',
+                'chisocu',
+                'chisomoi',
+                'heso',
+                'dongia',
+                'sosudung'
+            ])
+            return self.list(request, *args, **kwargs)
+        return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)

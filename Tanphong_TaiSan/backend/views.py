@@ -133,7 +133,7 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
 
         # Create Data
         if create_data:
-            serializer_hopdongdichvu = self.get_serializer(data=create_data, many=True)
+            serializer_hopdongdichvu = self.get_serializer(data=create_data)
             if serializer_hopdongdichvu.is_valid():
                 serializer_hopdongdichvu.save()
             else: return Response(serializer_hopdongdichvu.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -161,9 +161,6 @@ class LoaiDichVuAPIView(generics.GenericAPIView,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -194,9 +191,6 @@ class TaiSanAPIView(generics.GenericAPIView,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
-
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
@@ -220,9 +214,6 @@ class LoaiTaiSanAPIView(generics.GenericAPIView,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -294,7 +285,7 @@ class ThanhToanMixinsView(
     # lookup_field = 'id'
 
     def get_serializer(self, *args, **kwargs):
-        if isinstance(kwargs.get("data"), list):
+        if isinstance(kwargs.get("data", {}), list):
             kwargs['many'] = True
         return super().get_serializer(*args, **kwargs)
 
@@ -304,11 +295,28 @@ class ThanhToanMixinsView(
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
+        serializer_thanhtoan = self.get_serializer(data = request.data)
+        if serializer_thanhtoan.is_valid():
+            for validated_data in serializer_thanhtoan.validated_data:
+                validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
+                validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
+                validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
+                
+            thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
+            Thanhtoan.objects.bulk_create(objs=thanhtoan_obj)
+            return self.list(request, *args, **kwargs)
+        return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
     def put(self, request, *args, **kwargs):
         serializer_thanhtoan = self.get_serializer(data = request.data)
         if serializer_thanhtoan.is_valid():
+
+            for validated_data in serializer_thanhtoan.validated_data:
+                validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
+                validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
+                validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
+
             thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
             Thanhtoan.objects.bulk_update(objs= thanhtoan_obj, fields=[
                 'id_hopdongthanhtoan',
@@ -325,15 +333,6 @@ class ThanhToanMixinsView(
             ])
             return self.list(request, *args, **kwargs)
         return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def delete(self, request, *args, **kwargs):
-        self.destroy(request, *args, **kwargs)
-
-    # def perform_create(self, serializer):
-    #     TienTruocThue = serializer.validated_data.get("tientruocthue")
-    #     Thue = serializer.validated_data.get("thue")
-    #     TienSauThue = serializer.validated_data.get("tiensauthue")
-
-    #     if TienTruocThue is None:
-    #         TienTruocThue = 
-    #     return super().perform_create(serializer)
+        return self.destroy(request, *args, **kwargs)

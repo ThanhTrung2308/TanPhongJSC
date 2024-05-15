@@ -92,8 +92,6 @@ urlpatterns = [
     path('kheuocvay/<int:pk>/',views.KheUocVayAPIView.as_view(), name ='kheuocvay-retrieve'),
     path('kheuocvay/<int:pk>',views.KheUocVayAPIView.as_view(), name ='kheuocvay-retrieve'),
 
-    path("hopdongthanhtoan/", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-list-create'),
-    path("hopdongthanhtoan/<int:pk>/", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-retrieve-update-delete'),
 
     path("thanhtoan/", views.ThanhToanMixinsView.as_view(), name = 'thanhtoan-list-create-update'),
     path("thanhtoan/<int:pk>", views.ThanhToanMixinsView.as_view(), name="thanhtoan-retrieve-delete")

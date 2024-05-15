@@ -39,11 +39,6 @@ class KheUocVaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Kheuocvay
         fields = "__all__"
-    
-class HopDongThanhToanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HopdongThanhtoan
-        fields = "__all__"
 
 class ThanhToanSerializer(serializers.ModelSerializer):
     class Meta:

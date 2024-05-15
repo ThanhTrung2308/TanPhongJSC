@@ -247,30 +247,6 @@ class KheUocVayAPIView(generics.GenericAPIView,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-class HopDongThanhToanMixinsView(
-    generics.GenericAPIView,
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin
-):
-    queryset = HopdongThanhtoan.objects.all()
-    serializer_class = HopDongThanhToanSerializer
-
-    def get(self, request, *args, **kwargs):
-        if kwargs.get("pk") is not None:
-            return self.retrieve(request, *args, **kwargs)
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
 
 
 class ThanhToanMixinsView(
@@ -320,7 +296,7 @@ class ThanhToanMixinsView(
 
             thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
             Thanhtoan.objects.bulk_update(objs= thanhtoan_obj, fields=[
-                'id_hopdongthanhtoan',
+                'id_hopdong',
                 'dichvu',
                 'tientruocthue',
                 'thue',
@@ -330,7 +306,9 @@ class ThanhToanMixinsView(
                 'chisomoi',
                 'heso',
                 'dongia',
-                'sosudung'
+                'sosudung',
+                'sodntt',
+                'sotbdv'
             ])
             return self.list(request, *args, **kwargs)
         return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)

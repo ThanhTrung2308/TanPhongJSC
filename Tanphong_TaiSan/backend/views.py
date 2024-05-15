@@ -124,6 +124,7 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
             hopdongdichvu_obj = [HopdongDichvu(**data) for data in serializer_hopdongdichvu.validated_data]
             HopdongDichvu.objects.bulk_update(objs=hopdongdichvu_obj, fields=[
                 'id_hopdong',
+                'id_dichvu',
                 'dientich_soluong',
                 'dongia',
                 'chuthich',

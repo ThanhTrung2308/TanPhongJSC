@@ -231,7 +231,7 @@ class Taisan(models.Model):
 class Thanhtoan(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
     id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True)  # Field name made lowercase.
-    dichvu = models.CharField(db_column='DichVu', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    dichvu = models.ForeignKey(Dichvu, models.DO_NOTHING, db_column='DichVu', blank=True, null=True)  # Field name made lowercase.
     tientruocthue = models.BigIntegerField(db_column='TienTruocThue', blank=True, null=True)  # Field name made lowercase.
     thue = models.FloatField(db_column='Thue', blank=True, null=True)  # Field name made lowercase.
     tiensauthue = models.BigIntegerField(db_column='TienSauThue', blank=True, null=True)  # Field name made lowercase.

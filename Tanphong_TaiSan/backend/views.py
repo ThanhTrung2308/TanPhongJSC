@@ -273,6 +273,13 @@ class ThanhToanMixinsView(
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        sodntt = request.data[0]['sodntt']
+        if Thanhtoan.objects.filter(sodntt = sodntt).exists():
+            return Response({
+                "data": None,
+                "message": "Đã tồn tại mã" 
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         serializer_thanhtoan = self.get_serializer(data = request.data)
         if serializer_thanhtoan.is_valid():
             for validated_data in serializer_thanhtoan.validated_data:

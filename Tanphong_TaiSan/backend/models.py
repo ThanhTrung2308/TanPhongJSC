@@ -227,6 +227,18 @@ class Taisan(models.Model):
         managed = False
         db_table = 'TaiSan'
 
+class ThanhToanQuerySet(models.QuerySet):
+    def search_hopdong(self, hopdong):
+        return self.filter(id_hopdong = hopdong)
+    
+
+
+class ThanhToanManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return ThanhToanQuerySet(self.model, using=self._db)
+
+    def test_search(self, hopdong):
+        return self.get_queryset().search_hopdong(hopdong)
 
 class Thanhtoan(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -245,6 +257,7 @@ class Thanhtoan(models.Model):
     sodntt = models.CharField(db_column='SoDNTT', max_length=100, blank=True, null=True)  # Field name made lowercase.
     sotbdv = models.CharField(db_column='SoTBDV', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
+    objects = ThanhToanManager()
     class Meta:
         managed = False
         db_table = 'ThanhToan'

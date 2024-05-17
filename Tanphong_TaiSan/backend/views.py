@@ -315,8 +315,9 @@ class ThanhToanMixinsView(
                 'heso',
                 'dongia',
                 'sosudung',
+                'loaithue',
                 'sodntt',
-                'sotbdv'
+                'sotbdv',
             ])
         else:  return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
 

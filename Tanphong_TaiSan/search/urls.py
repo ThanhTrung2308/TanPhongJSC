@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('thanhtoan/', views.SearchThanhToanListView.as_view())
+    path('hopdongthanhtoan/', views.SearchHopdongThanhtoanListView.as_view())
 ]

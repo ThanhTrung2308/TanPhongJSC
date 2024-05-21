@@ -1,11 +1,13 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.db import connection
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
+
 from .models import *
 from .serializer import *
 
@@ -248,7 +250,66 @@ class KheUocVayAPIView(generics.GenericAPIView,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+class HopDongThanhToanMixinsView(
+    generics.GenericAPIView,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin
+):
+    queryset = HopdongThanhtoan.objects.prefetch_related('thanhtoan')
+    serializer_class = HopDongThanhToanSerializer
 
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs['many'] = True
+        return super().get_serializer(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.get("pk") is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        so_tbdv = request.data.get('sotbdv')
+        if self.queryset.filter(sotbdv = so_tbdv).exists():
+            return Response({
+                "data": None,
+                "message": "Đã tồn tại mã" 
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer_hopdongthanhtoan = self.get_serializer(data = request.data)
+        if serializer_hopdongthanhtoan.is_valid():
+            serializer_hopdongthanhtoan.save()
+            return self.list(request, *args, **kwargs)
+        
+        return Response({
+            "data": None,
+            "message": serializer_hopdongthanhtoan.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, *args, **kwargs):
+        try:
+            hopdongthanhtoan_obj = self.queryset.get(id=request.data.get('id'))
+        except ObjectDoesNotExist:
+            return Response({
+                "data": None,
+                "message": "Không tìm thấy hợp đồng thanh toán với id này"
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer_hopdongthanhtoan = self.get_serializer(hopdongthanhtoan_obj, data = request.data)
+        if serializer_hopdongthanhtoan.is_valid():
+            serializer_hopdongthanhtoan.save()
+            return self.list(request, *args, **kwargs)
+        
+        return Response({
+            "data": None,
+            "message": serializer_hopdongthanhtoan.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 class ThanhToanMixinsView(
     generics.GenericAPIView,
@@ -260,87 +321,10 @@ class ThanhToanMixinsView(
 ):
     queryset = Thanhtoan.objects.all()
     serializer_class = ThanhToanSerializer
-    # lookup_field = 'id'
-
-    def get_serializer(self, *args, **kwargs):
-        if isinstance(kwargs.get("data", {}), list):
-            kwargs['many'] = True
-        return super().get_serializer(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         if kwargs.get("pk") is not None:
             return self.retrieve(request, *args, **kwargs)
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        sodntt = request.data[0]['sodntt']
-        if Thanhtoan.objects.filter(sodntt = sodntt).exists():
-            return Response({
-                "data": None,
-                "message": "Đã tồn tại mã" 
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer_thanhtoan = self.get_serializer(data = request.data)
-        if serializer_thanhtoan.is_valid():
-            for validated_data in serializer_thanhtoan.validated_data:
-                validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
-                validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
-                validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
-                
-            thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
-            Thanhtoan.objects.bulk_create(objs=thanhtoan_obj)
-            return self.list(request, *args, **kwargs)
-        return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-    def put(self, request, *args, **kwargs):
-        update_data = []
-        create_data = []
-        for data in request.data:
-            if 'id' in data:
-                update_data.append(data)
-            else: create_data.append(data)
-        
-        # Update data
-        serializer_thanhtoan = self.get_serializer(data = update_data)
-        if serializer_thanhtoan.is_valid():
-            for validated_data in serializer_thanhtoan.validated_data:
-                validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
-                validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
-                validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
-
-            thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
-            Thanhtoan.objects.bulk_update(objs= thanhtoan_obj, fields=[
-                'id_hopdong',
-                'dichvu',
-                'tientruocthue',
-                'thue',
-                'tiensauthue',
-                'donvitinh',
-                'chisocu',
-                'chisomoi',
-                'heso',
-                'dongia',
-                'sosudung',
-                'loaithue',
-                'sodntt',
-                'sotbdv',
-            ])
-        else:  return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # Create data
-        if create_data:
-            serializer_thanhtoan = self.get_serializer(data = create_data)
-            if serializer_thanhtoan.is_valid():
-                for validated_data in serializer_thanhtoan.validated_data:
-                    validated_data['tientruocthue'] = validated_data['dongia'] * validated_data['sosudung'] if validated_data['sosudung'] is not None else validated_data['dongia']
-                    validated_data['thue'] = validated_data['tientruocthue'] * validated_data['loaithue']/100
-                    validated_data['tiensauthue'] = validated_data['tientruocthue'] + validated_data['thue']
-                    
-                thanhtoan_obj = [Thanhtoan(**data) for data in serializer_thanhtoan.validated_data]
-                Thanhtoan.objects.bulk_create(objs=thanhtoan_obj)
-            else: return Response(serializer_thanhtoan.errors, status=status.HTTP_400_BAD_REQUEST)
-
         return self.list(request, *args, **kwargs)
 
     

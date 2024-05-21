@@ -47,3 +47,57 @@ class ThanhToanSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': False, 'required': False}
         }
+
+class HopDongThanhToanSerializer(serializers.ModelSerializer):
+    thanhtoan = ThanhToanSerializer(many = True)
+    class Meta:
+        model = HopdongThanhtoan
+        fields = "__all__"
+    
+    def create(self, validated_data):
+        thanhtoan_data = validated_data.pop('thanhtoan')
+        for data in thanhtoan_data:
+            data['tientruocthue'] = data['dongia'] * data['sosudung'] if data['sosudung'] is not None else validated_data['dongia']
+            data['thue'] = data['tientruocthue'] * data['loaithue']/100
+            data['tiensauthue'] = data['tientruocthue'] + data['thue']
+        
+        validated_data['tongtientruocthue'] = sum(data['tientruocthue'] for data in thanhtoan_data)
+        validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
+        hopdongthanhtoan_obj = HopdongThanhtoan.objects.create(**validated_data)
+        
+        for data in thanhtoan_data:
+            Thanhtoan.objects.create(id_hopdongthanhtoan = hopdongthanhtoan_obj, **data)
+        return hopdongthanhtoan_obj
+    
+    def update(self, instance, validated_data):
+        thanhtoan_data = validated_data.pop('thanhtoan')
+        for data in thanhtoan_data:
+            data['tientruocthue'] = data['dongia'] * data['sosudung'] if data['sosudung'] is not None else validated_data['dongia']
+            data['thue'] = data['tientruocthue'] * data['loaithue']/100
+            data['tiensauthue'] = data['tientruocthue'] + data['thue']
+
+        update_data = []
+        create_data = []
+        for data in thanhtoan_data:
+            if 'id' in data: 
+                update_data.append(data)
+            else: 
+                create_data.append(data)
+
+        # Update Hopdongthanhtoan
+        validated_data['tongtientruocthue'] = sum(data['tientruocthue'] for data in thanhtoan_data)
+        validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
+        
+        # Update thanhtoan
+        field_names = [field.name for field in Thanhtoan._meta.fields if field.name != 'id']
+        thanhtoan_obj = [Thanhtoan(**data) for data in update_data]
+        Thanhtoan.objects.bulk_update(objs=thanhtoan_obj, fields=field_names)
+
+        # Create thanhtoan
+        thanhtoan_obj = [Thanhtoan(**data) for data in create_data]
+        Thanhtoan.objects.bulk_create(objs=thanhtoan_obj)
+        
+        return super().update(instance, validated_data)
+
+        
+

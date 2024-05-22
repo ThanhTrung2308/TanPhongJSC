@@ -331,3 +331,10 @@ class ThanhToanMixinsView(
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+class SendMailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        print(request.data)
+        return Response({
+            "data":None,
+            "Message": "Gửi File Thành Công"
+        }, status=status.HTTP_200_OK)

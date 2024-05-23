@@ -335,11 +335,12 @@ class ThanhToanMixinsView(
 class SendMailAPIView(APIView):
     def post(self, request, *args, **kwargs):
         pdf_file = request.data.get('file')
+        print(type(pdf_file))
         email = EmailMessage(
             subject="Test Send Mail",
             body="Test đính k",
             from_email='adudarkwa33@gmail.com',
-            to=['thanhd436@gmail.com'],
+            to=['thanhd436@gmail.com', 'khoatranpc603@gmail.com'],
         )
 
         # Attach the PDF file to the email

@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.db import connection
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 
 from rest_framework import status
 from rest_framework.exceptions import NotFound
@@ -333,7 +334,18 @@ class ThanhToanMixinsView(
 
 class SendMailAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        pdf_file = request.data.get('file')
+        email = EmailMessage(
+            subject="Test Send Mail",
+            body="Test đính k",
+            from_email='adudarkwa33@gmail.com',
+            to=['thanhd436@gmail.com'],
+        )
+
+        # Attach the PDF file to the email
+        email.attach('invoice.pdf', pdf_file.read(), 'application/pdf')
+        email.send()
+
         return Response({
             "data":None,
             "Message": "Gửi File Thành Công"

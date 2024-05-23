@@ -332,7 +332,7 @@ class ThanhToanMixinsView(
         return self.destroy(request, *args, **kwargs)
 
 class SendMailAPIView(APIView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         print(request.data)
         return Response({
             "data":None,

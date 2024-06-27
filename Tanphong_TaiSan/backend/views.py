@@ -334,20 +334,24 @@ class ThanhToanMixinsView(
 
 class SendMailAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        pdf_file = request.data.get('file')
-        print(type(pdf_file))
-        email = EmailMessage(
-            subject="Test Send Mail",
-            body="Test đính k",
-            from_email='adudarkwa33@gmail.com',
-            to=['thanhd436@gmail.com', 'khoatranpc603@gmail.com'],
-        )
+        file = request.FILES.get('file')  # Get the uploaded file from request.FILES
 
-        # Attach the PDF file to the email
-        email.attach('invoice.pdf', pdf_file.read(), 'application/pdf')
-        email.send()
+        if file:
+            email = EmailMessage(
+                subject="Test Send Mail",
+                body="Test đính kèm file",
+                from_email='adudarkwa33@gmail.com',
+                to=['thanhd436@gmail.com'],
+            )
 
+            # Attach the file to the email
+            email.attach(file.name, file.read(), file.content_type)
+            email.send()
+
+            return Response({
+                "message": "File sent successfully"
+            }, status=status.HTTP_200_OK)
+        
         return Response({
-            "data":None,
-            "Message": "Gửi File Thành Công"
-        }, status=status.HTTP_200_OK)
+            "message": "No file provided"
+        }, status=status.HTTP_400_BAD_REQUEST)

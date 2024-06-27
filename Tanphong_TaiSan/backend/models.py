@@ -215,7 +215,7 @@ class SanphamOld(models.Model):
 
 
 class Taisan(models.Model):
-    id_taisan = models.BigIntegerField(db_column='Id_TaiSan', primary_key=True)  # Field name made lowercase.
+    id_taisan = models.BigAutoField(db_column='Id_TaiSan', primary_key=True)  # Field name made lowercase.
     id_loaitaisan = models.ForeignKey(Loaitaisan, models.DO_NOTHING, db_column='Id_LoaiTaiSan')  # Field name made lowercase.
     tentaisan = models.CharField(db_column='TenTaiSan', max_length=100, blank=True, null=True)  # Field name made lowercase.
     ngayghitang = models.DateField(db_column='NgayGhiTang', blank=True, null=True)  # Field name made lowercase.

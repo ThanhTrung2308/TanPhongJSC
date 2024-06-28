@@ -33,7 +33,7 @@ class Chitietdonhang(models.Model):
 
 
 class Dichvu(models.Model):
-    id_dichvu = models.BigIntegerField(db_column='Id_DichVu', primary_key=True)  # Field name made lowercase.
+    id_dichvu = models.BigAutoField(db_column='Id_DichVu', primary_key=True)  # Field name made lowercase.
     id_loaidichvu = models.ForeignKey('Loaidichvu', models.DO_NOTHING, db_column='Id_LoaiDichVu')  # Field name made lowercase.
     tendichvu = models.CharField(db_column='TenDichVu', max_length=100, blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
@@ -137,7 +137,7 @@ class Loaichiphi(models.Model):
 
 
 class Loaidichvu(models.Model):
-    id_loaidichvu = models.BigIntegerField(db_column='Id_LoaiDichVu', primary_key=True)  # Field name made lowercase.
+    id_loaidichvu = models.BigAutoField(db_column='Id_LoaiDichVu', primary_key=True)  # Field name made lowercase.
     tenloaidichvu = models.CharField(db_column='TenLoaiDichVu', max_length=100)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
 
@@ -157,7 +157,7 @@ class Loainguyenlieu(models.Model):
 
 
 class Loaitaisan(models.Model):
-    id_loaitaisan = models.BigIntegerField(db_column='Id_LoaiTaiSan', primary_key=True)  # Field name made lowercase.
+    id_loaitaisan = models.BigAutoField(db_column='Id_LoaiTaiSan', primary_key=True)  # Field name made lowercase.
     tenloaitaisan = models.CharField(db_column='TenLoaiTaiSan', max_length=100)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
 

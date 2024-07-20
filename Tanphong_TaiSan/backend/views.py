@@ -335,13 +335,14 @@ class ThanhToanMixinsView(
 class SendMailAPIView(APIView):
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('file')  # Get the uploaded file from request.FILES
+        email_send = request.data.get("email")
 
         if file:
             email = EmailMessage(
                 subject="Test Send Mail",
                 body="Test đính kèm file",
                 from_email='adudarkwa33@gmail.com',
-                to=['thanhd436@gmail.com'],
+                to=[email_send],
             )
 
             # Attach the file to the email

@@ -197,6 +197,7 @@ class SanphamNguyenlieu(models.Model):
     id_sanpham = models.ForeignKey(Sanpham, models.DO_NOTHING, db_column='Id_SanPham', blank=True, null=True)  # Field name made lowercase.
     id_nguyenlieu = models.ForeignKey(Nguyenlieu, models.DO_NOTHING, db_column='Id_NguyenLieu', blank=True, null=True)  # Field name made lowercase.
     trongluong = models.FloatField(db_column='TrongLuong', blank=True, null=True)  # Field name made lowercase.
+    phantramtrongluong = models.FloatField(db_column='PhanTramTrongLuong', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

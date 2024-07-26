@@ -262,8 +262,8 @@ class Thanhtoan(models.Model):
     chisocu = models.IntegerField(db_column='ChiSoCu', blank=True, null=True)  # Field name made lowercase.
     chisomoi = models.IntegerField(db_column='ChiSoMoi', blank=True, null=True)  # Field name made lowercase.
     heso = models.IntegerField(db_column='HeSo', blank=True, null=True)  # Field name made lowercase.
-    dongia = models.BigIntegerField(db_column='DonGia', blank=True, null=True)  # Field name made lowercase.
-    sosudung = models.IntegerField(db_column='SoSuDung', blank=True, null=True)  # Field name made lowercase.
+    dongia = models.FloatField(db_column='DonGia', blank=True, null=True)  # Field name made lowercase.
+    sosudung = models.FloatField(db_column='SoSuDung', blank=True, null=True)  # Field name made lowercase.
     loaithue = models.BigIntegerField(db_column='LoaiThue', blank=True, null=True)  # Field name made lowercase.
     id_hopdongthanhtoan = models.ForeignKey(HopdongThanhtoan, models.DO_NOTHING, db_column='Id_HopDongThanhToan', blank=True, null=True, related_name='thanhtoan')  # Field name made lowercase.
 

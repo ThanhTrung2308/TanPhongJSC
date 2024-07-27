@@ -86,7 +86,8 @@ class HopdongDichvu(models.Model):
     id_hopdongdichvu = models.BigAutoField(db_column='Id_HopDongDichVu', primary_key=True)  # Field name made lowercase.
     id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True)  # Field name made lowercase.
     id_dichvu = models.ForeignKey(Dichvu, models.DO_NOTHING, db_column='Id_DichVu', blank=True, null=True)  # Field name made lowercase.
-    dientich_soluong = models.FloatField(db_column='DienTich_SoLuong', blank=True, null=True)  # Field name made lowercase.
+    soluong = models.FloatField(db_column='SoLuong', blank=True, null=True)  # Field name made lowercase.
+    donvitinh = models.CharField(db_column='DonViTinh', max_length=100, blank=True, null=True)  # Field name made lowercase.
     dongia = models.FloatField(db_column='DonGia', blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
 

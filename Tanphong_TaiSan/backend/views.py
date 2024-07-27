@@ -128,7 +128,8 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
             HopdongDichvu.objects.bulk_update(objs=hopdongdichvu_obj, fields=[
                 'id_hopdong',
                 'id_dichvu',
-                'dientich_soluong',
+                'soluong',
+                'donvitinh',
                 'dongia',
                 'chuthich',
             ])

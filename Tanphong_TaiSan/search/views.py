@@ -10,7 +10,7 @@ class SearchHopdongThanhtoanListView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        param_query = self.request.GET.get("hopdong")
+        param_query = self.request.GET.get("id_hopdong")
         if param_query is not None:
-            return queryset.search_hopdong(param_query)
+            return queryset.search_hopdong(param_query).order_by("id")
         return None

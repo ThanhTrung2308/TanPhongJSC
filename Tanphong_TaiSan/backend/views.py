@@ -25,6 +25,9 @@ class HopDongAPIView(generics.GenericAPIView,
     queryset = Hopdong.objects.all()
     serializer_class = HopDongSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().order_by('id_hopdong')
+
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if pk is not None:
@@ -45,9 +48,6 @@ class HopDongAPIView(generics.GenericAPIView,
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -78,9 +78,6 @@ class DichVuAPIView(generics.GenericAPIView,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return self.retrieve(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
@@ -262,6 +259,9 @@ class HopDongThanhToanMixinsView(
 ):
     queryset = HopdongThanhtoan.objects.prefetch_related('thanhtoan')
     serializer_class = HopDongThanhToanSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("id")
 
     def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get("data", {}), list):

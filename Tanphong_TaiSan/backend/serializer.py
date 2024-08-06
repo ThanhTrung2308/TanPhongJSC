@@ -51,6 +51,7 @@ class ThanhToanSerializer(serializers.ModelSerializer):
 class HopDongThanhToanSerializer(serializers.ModelSerializer):
     thanhtoan = ThanhToanSerializer(many = True)
     tongtiensauthue_giamtru = serializers.SerializerMethodField(read_only = True)
+    tien_giamtru = serializers.SerializerMethodField(read_only = True)
     class Meta:
         model = HopdongThanhtoan
         fields = "__all__"
@@ -64,7 +65,7 @@ class HopDongThanhToanSerializer(serializers.ModelSerializer):
         
         validated_data['tongtientruocthue'] = sum(data['tientruocthue'] for data in thanhtoan_data)
         validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
-        validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
+        # validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
 
         hopdongthanhtoan_obj = HopdongThanhtoan.objects.create(**validated_data)
         
@@ -90,7 +91,7 @@ class HopDongThanhToanSerializer(serializers.ModelSerializer):
         # Update Hopdongthanhtoan
         validated_data['tongtientruocthue'] = sum(data['tientruocthue'] for data in thanhtoan_data)
         validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
-        validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
+        # validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
 
         # Update thanhtoan
         field_names = [field.name for field in Thanhtoan._meta.fields if field.name != 'id']
@@ -104,7 +105,10 @@ class HopDongThanhToanSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
     
     def get_tongtiensauthue_giamtru(self, obj):
-        return obj.tongtiensauthue - obj.giamtru
+        return obj.tongtiensauthue - self.get_tien_giamtru(obj)
+    
+    def get_tien_giamtru(self, obj):
+        return (obj.giamtru/100)*obj.tongtientruocthue
         
         
 

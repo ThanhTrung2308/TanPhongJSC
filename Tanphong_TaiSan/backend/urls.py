@@ -98,5 +98,7 @@ urlpatterns = [
     path("hopdongthanhtoan/", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-list-create-update'),
     path("hopdongthanhtoan/<int:pk>", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-retrieive-delete'),
     
+    path("hopdongdichvuForThanhtoan/", views.HopDongDichVu_For_ThanhToanAPIView.as_view(), name = 'hopdongthanhtoan-for-thanhtoan'),
+    
     path("sendmail/", views.SendMailAPIView.as_view(), name = 'send_mail_pdf')
 ]

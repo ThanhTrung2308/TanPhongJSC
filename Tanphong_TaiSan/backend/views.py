@@ -100,6 +100,7 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
         return super().get_serializer(*args, **kwargs)
     
     def get(self, request, *args, **kwargs):
+        print(request.GET)
         pk = kwargs.get('pk')
         if pk is not None:
             return self.retrieve(request, *args, **kwargs)
@@ -145,6 +146,38 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+class HopDongDichVu_For_ThanhToanAPIView(APIView):
+    def get(self, request):
+        param_query = request.GET.get("id_hopdong")
+        print(request.GET)
+        if param_query is not None:
+            hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=param_query)
+            serializers_hopdongdichvu = HopDongDichVuSerializer(hopdongdichvu, many=True)
+
+            hopdongthanhtoan = HopdongThanhtoan.objects.order_by('-id').first()
+            serializers_hopdongthanhtoan = HopDongThanhToanSerializer(hopdongthanhtoan)
+            
+            # Tạo một bản sao của dữ liệu để có thể sửa đổi
+            updated_data = []
+            
+            for field_hddv in serializers_hopdongdichvu.data:
+                updated_field = field_hddv.copy()  # Tạo bản sao của mỗi phần tử
+                for filed_tt in serializers_hopdongthanhtoan.data['thanhtoan']:
+                    if field_hddv['id_dichvu'] == filed_tt['dichvu']:
+                        updated_field['chisocu'] = filed_tt['chisomoi']
+                updated_data.append(updated_field)
+            return Response({
+                "data:":updated_data,
+                "message": "successfully",
+            }, status=status.HTTP_200_OK)
+
+        return Response({
+            "data": None,
+            "message": "Không có query id" 
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class LoaiDichVuAPIView(generics.GenericAPIView,
                      generics.mixins.ListModelMixin,

@@ -65,6 +65,9 @@ class DichVuAPIView(generics.GenericAPIView,
     queryset = Dichvu.objects.all()
     serializer_class = DichVuSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("id_dichvu")
+
     def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get('data'), list):
             kwargs['many'] = True
@@ -187,6 +190,9 @@ class LoaiDichVuAPIView(generics.GenericAPIView,
                      generics.mixins.DestroyModelMixin):
     queryset = Loaidichvu.objects.all()
     serializer_class = LoaiDichVuSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("id_loaidichvu")
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')

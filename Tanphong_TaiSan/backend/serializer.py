@@ -2,10 +2,6 @@ from rest_framework import serializers
 from .models import *
 
 
-class HopDongSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Hopdong
-        fields = "__all__"
 
 class DichVuSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +15,11 @@ class HopDongDichVuSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id_hopdongdichvu': {'read_only': False, 'required': False}
         }
+
+class HopDongSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hopdong
+        fields = "__all__"
 
 class LoaiDichVuSerializer(serializers.ModelSerializer):
     class Meta:

@@ -34,7 +34,7 @@ class Chitietdonhang(models.Model):
 
 class Dichvu(models.Model):
     id_dichvu = models.BigAutoField(db_column='Id_DichVu', primary_key=True)  # Field name made lowercase.
-    id_loaidichvu = models.ForeignKey('Loaidichvu', models.DO_NOTHING, db_column='Id_LoaiDichVu')  # Field name made lowercase.
+    id_loaidichvu = models.ForeignKey('Loaidichvu', models.DO_NOTHING, db_column='Id_LoaiDichVu', blank=True, null = True)  # Field name made lowercase.
     tendichvu = models.CharField(db_column='TenDichVu', max_length=100, blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
     ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
@@ -76,6 +76,8 @@ class Hopdong(models.Model):
     tongthu = models.FloatField(db_column='TongThu', blank=True, null=True)  # Field name made lowercase.
     chuthich = models.CharField(db_column='ChuThich', max_length=100, blank=True, null=True)  # Field name made lowercase.
     ngayghi = models.DateField(db_column='NgayGhi', blank=True, null=True)  # Field name made lowercase.
+    tiencoc = models.FloatField(db_column='TienCoc', blank=True, null=True)  # Field name made lowercase.
+    ngayketthuc = models.DateField(db_column='NgayKetThuc', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -84,7 +86,7 @@ class Hopdong(models.Model):
 
 class HopdongDichvu(models.Model):
     id_hopdongdichvu = models.BigAutoField(db_column='Id_HopDongDichVu', primary_key=True)  # Field name made lowercase.
-    id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True)  # Field name made lowercase.
+    id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True,)  # Field name made lowercase.
     id_dichvu = models.ForeignKey(Dichvu, models.DO_NOTHING, db_column='Id_DichVu', blank=True, null=True)  # Field name made lowercase.
     soluong = models.FloatField(db_column='SoLuong', blank=True, null=True)  # Field name made lowercase.
     donvitinh = models.CharField(db_column='DonViTinh', max_length=100, blank=True, null=True)  # Field name made lowercase.

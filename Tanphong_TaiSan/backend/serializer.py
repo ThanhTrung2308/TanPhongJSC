@@ -41,20 +41,20 @@ class KheUocVaySerializer(serializers.ModelSerializer):
         model = Kheuocvay
         fields = "__all__"
 
-class ThanhToanSerializer(serializers.ModelSerializer):
+class CtThanhtoanDichvuSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Thanhtoan
+        model = CtThanhtoanDichvu
         fields = "__all__"
         extra_kwargs = {
             'id': {'read_only': False, 'required': False}
         }
 
-class HopDongThanhToanSerializer(serializers.ModelSerializer):
-    thanhtoan = ThanhToanSerializer(many = True)
+class ThanhtoanDichvuSerializer(serializers.ModelSerializer):
+    thanhtoan = CtThanhtoanDichvuSerializer(many = True)
     tongtiensauthue_giamtru = serializers.SerializerMethodField(read_only = True)
     tien_giamtru = serializers.SerializerMethodField(read_only = True)
     class Meta:
-        model = HopdongThanhtoan
+        model = ThanhtoanDichvu
         fields = "__all__"
     
     def create(self, validated_data):
@@ -68,10 +68,10 @@ class HopDongThanhToanSerializer(serializers.ModelSerializer):
         validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
         # validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
 
-        hopdongthanhtoan_obj = HopdongThanhtoan.objects.create(**validated_data)
+        hopdongthanhtoan_obj = ThanhtoanDichvu.objects.create(**validated_data)
         
         for data in thanhtoan_data:
-            Thanhtoan.objects.create(id_hopdongthanhtoan = hopdongthanhtoan_obj, **data)
+            CtThanhtoanDichvu.objects.create(id_hopdongthanhtoan = hopdongthanhtoan_obj, **data)
         return hopdongthanhtoan_obj
     
     def update(self, instance, validated_data):
@@ -95,13 +95,13 @@ class HopDongThanhToanSerializer(serializers.ModelSerializer):
         # validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
 
         # Update thanhtoan
-        field_names = [field.name for field in Thanhtoan._meta.fields if field.name != 'id']
-        thanhtoan_obj = [Thanhtoan(**data) for data in update_data]
-        Thanhtoan.objects.bulk_update(objs=thanhtoan_obj, fields=field_names)
+        field_names = [field.name for field in CtThanhtoanDichvu._meta.fields if field.name != 'id']
+        thanhtoan_obj = [CtThanhtoanDichvu(**data) for data in update_data]
+        CtThanhtoanDichvu.objects.bulk_update(objs=thanhtoan_obj, fields=field_names)
 
         # Create thanhtoan
-        thanhtoan_obj = [Thanhtoan(**data) for data in create_data]
-        Thanhtoan.objects.bulk_create(objs=thanhtoan_obj)
+        thanhtoan_obj = [CtThanhtoanDichvu(**data) for data in create_data]
+        CtThanhtoanDichvu.objects.bulk_create(objs=thanhtoan_obj)
         
         return super().update(instance, validated_data)
     

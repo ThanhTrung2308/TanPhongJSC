@@ -158,8 +158,8 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=param_query)
             serializers_hopdongdichvu = HopDongDichVuSerializer(hopdongdichvu, many=True)
 
-            hopdongthanhtoan = HopdongThanhtoan.objects.order_by('-id').first()
-            serializers_hopdongthanhtoan = HopDongThanhToanSerializer(hopdongthanhtoan)
+            hopdongthanhtoan = ThanhtoanDichvu.objects.order_by('-id').first()
+            serializers_hopdongthanhtoan = ThanhtoanDichvuSerializer(hopdongthanhtoan)
             
             # Tạo một bản sao của dữ liệu để có thể sửa đổi
             updated_data = []
@@ -296,8 +296,8 @@ class HopDongThanhToanMixinsView(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin
 ):
-    queryset = HopdongThanhtoan.objects.prefetch_related('thanhtoan')
-    serializer_class = HopDongThanhToanSerializer
+    queryset = ThanhtoanDichvu.objects.prefetch_related('thanhtoan')
+    serializer_class = ThanhtoanDichvuSerializer
 
     def get_queryset(self):
         return super().get_queryset().order_by("id")
@@ -360,8 +360,8 @@ class ThanhToanMixinsView(
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin
 ):
-    queryset = Thanhtoan.objects.all()
-    serializer_class = ThanhToanSerializer
+    queryset = CtThanhtoanDichvu.objects.all()
+    serializer_class = CtThanhtoanDichvuSerializer
 
     def get(self, request, *args, **kwargs):
         if kwargs.get("pk") is not None:

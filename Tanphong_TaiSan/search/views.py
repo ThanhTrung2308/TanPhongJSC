@@ -6,7 +6,7 @@ from backend.serializer import *
 # Create your views here.
 class SearchHopdongThanhtoanListView(generics.ListAPIView):
     queryset = ThanhtoanDichvu.objects.prefetch_related('thanhtoan')
-    serializer_class = ThanhtoanDichvu
+    serializer_class = ThanhtoanDichvuSerializer
 
     def get_queryset(self):
         queryset = super().get_queryset()

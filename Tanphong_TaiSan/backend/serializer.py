@@ -93,9 +93,9 @@ class ThanhtoanDichvuSerializer(serializers.ModelSerializer):
         validated_data['tongtientruocthue'] = sum(data['tientruocthue'] for data in thanhtoan_data)
         validated_data['tongtiensauthue'] = sum(data['tiensauthue'] for data in thanhtoan_data)
         # validated_data['giamtru'] = (validated_data['giamtru']/100)*validated_data['tongtientruocthue']
-
+        
         # Update thanhtoan
-        field_names = [field.name for field in CtThanhtoanDichvu._meta.fields if field.name != 'id']
+        field_names = ['dichvu', 'tientruocthue', 'thue', 'tiensauthue', 'donvitinh', 'chisocu', 'chisomoi', 'heso', 'dongia', 'sosudung', 'loaithue'] 
         thanhtoan_obj = [CtThanhtoanDichvu(**data) for data in update_data]
         CtThanhtoanDichvu.objects.bulk_update(objs=thanhtoan_obj, fields=field_names)
 

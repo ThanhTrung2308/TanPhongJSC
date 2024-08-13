@@ -295,7 +295,7 @@ class CtThanhtoanDichvu(models.Model):
     dongia = models.FloatField(db_column='DonGia', blank=True, null=True)  # Field name made lowercase.
     sosudung = models.FloatField(db_column='SoSuDung', blank=True, null=True)  # Field name made lowercase.
     loaithue = models.BigIntegerField(db_column='LoaiThue', blank=True, null=True)  # Field name made lowercase.
-    id_thanhtoan_dichvu = models.ForeignKey('ThanhtoanDichvu', models.DO_NOTHING, db_column='ID_ThanhToan_DichVu', blank=True, null=True, related_name='thanhtoan')  # Field name made lowercase.
+    id_hopdongthanhtoan = models.ForeignKey('ThanhtoanDichvu', models.DO_NOTHING, db_column='ID_ThanhToan_DichVu', blank=True, null=True, related_name='thanhtoan')  # Field name made lowercase.
 
     class Meta:
         managed = False

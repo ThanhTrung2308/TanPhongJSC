@@ -256,7 +256,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
                         updated_field['chisocu'] = filed_tt['chisomoi']
                 updated_data.append(updated_field)
             return Response({
-                "data:":updated_data,
+                "data":updated_data,
                 "message": "successfully",
             }, status=status.HTTP_200_OK)
 

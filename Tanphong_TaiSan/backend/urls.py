@@ -92,13 +92,15 @@ urlpatterns = [
     path('kheuocvay/<int:pk>/',views.KheUocVayAPIView.as_view(), name ='kheuocvay-retrieve'),
     path('kheuocvay/<int:pk>',views.KheUocVayAPIView.as_view(), name ='kheuocvay-retrieve'),
 
-    path("thanhtoan/", views.ThanhToanMixinsView.as_view(), name="thanhtoan-list"),
-    path("thanhtoan/<int:pk>", views.ThanhToanMixinsView.as_view(), name="thanhtoan-retrieve-delete"),
+    path("thanhtoan/", views.CtThanhtoanDichvuMixinsView.as_view(), name="thanhtoan-list"),
+    path("thanhtoan/<int:pk>", views.CtThanhtoanDichvuMixinsView.as_view(), name="thanhtoan-retrieve-delete"),
 
-    path("hopdongthanhtoan/", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-list-create-update'),
-    path("hopdongthanhtoan/<int:pk>", views.HopDongThanhToanMixinsView.as_view(), name = 'hopdongthanhtoan-retrieive-delete'),
+    path("hopdongthanhtoan/", views.ThanhtoanDichvuMixinsView.as_view(), name = 'hopdongthanhtoan-list-create-update'),
+    path("hopdongthanhtoan/<int:pk>", views.ThanhtoanDichvuMixinsView.as_view(), name = 'hopdongthanhtoan-retrieive-delete'),
     
     path("hopdongdichvuForThanhtoan/", views.HopDongDichVu_For_ThanhToanAPIView.as_view(), name = 'hopdongthanhtoan-for-thanhtoan'),
     
-    path("sendmail/", views.SendMailAPIView.as_view(), name = 'send_mail_pdf')
+    path("sendmail/", views.SendMailAPIView.as_view(), name = 'send_mail_pdf'),
+
+    path("hopdongnhaxuong/", views.HopDongNhaXuongAPIView.as_view(), name = 'hopdong-list-retrieve-create-update'),
 ]

@@ -121,7 +121,7 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
                 update_data.append(item)
             else:
                 create_data.append(item)
-        
+
         # Update data
         serializer_hopdongdichvu = self.get_serializer(data = update_data)
         if serializer_hopdongdichvu.is_valid():
@@ -150,10 +150,95 @@ class HopDongDichVuAPIView(generics.GenericAPIView,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+
+
+class HopDongNhaXuongAPIView(generics.GenericAPIView,
+                             mixins.ListModelMixin,
+                             mixins.RetrieveModelMixin,
+                             mixins.DestroyModelMixin):
+    
+    queryset = HopdongNhaxuong.objects.all()
+    serializer_class = HopDongNhaXuongSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("id")
+    
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get("data", {}), list):
+            kwargs['many'] = True
+        return super().get_serializer(*args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, "Tải dữ liệu thành công",*args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        serializers_hopdongnhaxuong = self.get_serializer(data = request.data)
+        if serializers_hopdongnhaxuong.is_valid():
+            serializers_hopdongnhaxuong.save()
+            return self.list(request, "Thêm mới thành công",*args, **kwargs)
+        return Response({
+            "data": None,
+            "message": "Định dạng dữ liệu chưa đúng",
+            "error": serializers_hopdongnhaxuong.errors
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def put(self, request, *args, **kwargs):
+        # Chi data thành 2 phần update và create
+        update_data = []
+        create_data = []
+        for data in request.data:
+            if 'id' in data:
+                update_data.append(data)
+            else: 
+                create_data.append(data)
+
+        # Chuyển data về thành serializer
+        update_serializer = self.get_serializer(data = update_data)
+        create_serializer = self.get_serializer(data = create_data)
+
+        # Update dữ liệu hàng loạt
+        if update_serializer.is_valid():
+            update_obj = [HopdongNhaxuong(**data) for data in update_serializer.validated_data]
+            HopdongNhaxuong.objects.bulk_update(objs=update_obj, fields=[f.name for f in HopdongNhaxuong._meta.fields if f.name != 'id'])
+
+            # Create dữ liệu hàng loạt
+            if create_serializer.is_valid():
+                create_obj = [HopdongNhaxuong(**data) for data in create_serializer.validated_data]
+                HopdongNhaxuong.objects.bulk_create(create_obj)
+                return self.list(request, "Cập nhật dữ liệu thành công", *args, **kwargs)
+            
+            # Responce khi dữ liệu create xác thực sai
+            return Response({
+                "data":None,
+                "message": "Định dạng dữ liệu create chưa đúng chưa đúng",
+                "error": create_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Responce khi dữ liệu update xác thực sai
+        return Response({
+            "data":None,
+            "message": "Định dạng dữ liệu update chưa đúng chưa đúng",
+            "error": update_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    def list(self, request, message,*args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "data": serializer.data,
+            "message": message,
+            "error": None
+        }, status=status.HTTP_200_OK)
+
+
+
 class HopDongDichVu_For_ThanhToanAPIView(APIView):
     def get(self, request):
         param_query = request.GET.get("id_hopdong")
-        print(request.GET)
         if param_query is not None:
             hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=param_query)
             serializers_hopdongdichvu = HopDongDichVuSerializer(hopdongdichvu, many=True)
@@ -288,7 +373,7 @@ class KheUocVayAPIView(generics.GenericAPIView,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-class HopDongThanhToanMixinsView(
+class ThanhtoanDichvuMixinsView(
     generics.GenericAPIView,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -352,7 +437,8 @@ class HopDongThanhToanMixinsView(
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-class ThanhToanMixinsView(
+
+class CtThanhtoanDichvuMixinsView(
     generics.GenericAPIView,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -371,6 +457,8 @@ class ThanhToanMixinsView(
     
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
 
 class SendMailAPIView(APIView):
     def post(self, request, *args, **kwargs):

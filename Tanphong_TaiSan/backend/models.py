@@ -106,7 +106,8 @@ class HopdongNhaxuong(models.Model):
     ngayketthuc = models.DateField(db_column='NgayKetThuc', blank=True, null=True)  # Field name made lowercase.
     id_hopdong = models.ForeignKey(Hopdong, models.DO_NOTHING, db_column='Id_HopDong', blank=True, null=True)  # Field name made lowercase.
     id_dichvu = models.ForeignKey(Dichvu, models.DO_NOTHING, db_column='Id_DichVu', blank=True, null=True)  # Field name made lowercase.
-    id_loaithanhtoan = models.ForeignKey('Loaithanhtoan', models.DO_NOTHING, db_column='Id_LoaiThanhToan', blank=True, null=True)  # Field name made lowercase.
+    loaithanhtoan = models.CharField(db_column='LoaiThanhToan', blank=True, null=True)  # Field name made lowercase.
+    chuthich = models.CharField(db_column='ChuThich', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -163,16 +164,6 @@ class Loaidichvu(models.Model):
         managed = False
         db_table = 'LoaiDichVu'
 
-
-class Loaithanhtoan(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    created_at = models.DateTimeField()
-    ten = models.CharField(db_column='Ten', blank=True, null=True)  # Field name made lowercase.
-    chuthich = models.TextField(db_column='ChuThich', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'LoaiThanhToan'
 
 
 class Loainguyenlieu(models.Model):

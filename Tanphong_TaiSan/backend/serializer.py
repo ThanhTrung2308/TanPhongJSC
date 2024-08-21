@@ -29,7 +29,6 @@ class HopDongSerializer(serializers.ModelSerializer):
         model = Hopdong
         fields = "__all__"
 
-
 class LoaiDichVuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loaidichvu
@@ -81,6 +80,7 @@ class ThanhtoanDichvuSerializer(serializers.ModelSerializer):
         
         for data in thanhtoan_data:
             CtThanhtoanDichvu.objects.create(id_hopdongthanhtoan = hopdongthanhtoan_obj, **data)
+
         return hopdongthanhtoan_obj
     
     def update(self, instance, validated_data):

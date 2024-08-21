@@ -26,7 +26,7 @@ class HopDongAPIView(generics.GenericAPIView,
     serializer_class = HopDongSerializer
 
     def get_queryset(self):
-        return super().get_queryset().order_by('id_hopdong')
+        return super().get_queryset().filter(trangthai=1).order_by('id_hopdong')
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
@@ -53,7 +53,13 @@ class HopDongAPIView(generics.GenericAPIView,
         return self.update(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        Hopdong_obj = self.get_object()
+        Hopdong_obj.trangthai = 0
+        Hopdong_obj.save()
+
+        return Response({
+            "message":"Xóa thành công"
+        }, status=status.HTTP_200_OK)
     
 
 class DichVuAPIView(generics.GenericAPIView,
@@ -238,25 +244,43 @@ class HopDongNhaXuongAPIView(generics.GenericAPIView,
 
 class HopDongDichVu_For_ThanhToanAPIView(APIView):
     def get(self, request):
+        # Lấy giá trị tham số query 'id_hopdong' từ URL
         param_query = request.GET.get("id_hopdong")
+        
+        # Kiểm tra nếu có tham số id_hopdong trong query
         if param_query is not None:
+            # Lọc dữ liệu từ bảng HopdongDichvu dựa trên id_hopdong
             hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=param_query)
             serializers_hopdongdichvu = HopDongDichVuSerializer(hopdongdichvu, many=True)
-
-            hopdongthanhtoan = ThanhtoanDichvu.objects.order_by('-id').first()
+            
+            # Lọc và lấy bản ghi đầu tiên từ bảng ThanhtoanDichvu dựa trên id_hopdong và sắp xếp giảm dần theo id
+            hopdongthanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=param_query).order_by('-id').first()
             serializers_hopdongthanhtoan = ThanhtoanDichvuSerializer(hopdongthanhtoan)
             
-            # Tạo một bản sao của dữ liệu để có thể sửa đổi
-            updated_data = []
             
-            for field_hddv in serializers_hopdongdichvu.data:
-                updated_field = field_hddv.copy()  # Tạo bản sao của mỗi phần tử
-                for filed_tt in serializers_hopdongthanhtoan.data['thanhtoan']:
-                    if field_hddv['id_dichvu'] == filed_tt['dichvu']:
-                        updated_field['chisocu'] = filed_tt['chisomoi']
+            list_id_dichvu = [7, 8, 32, 33, 34] # Danh sách chứa các id cần lưu chỉ số cũ
+            updated_data = [] # Tạo một danh sách chứa dữ liệu đã được cập nhật
+
+            # Duyệt qua từng bản ghi trong danh sách dịch vụ hợp đồng để lắp thông tin chỉ số mới của thanh toán kỳ trước vào chỉ số cũ của kì này
+            for item_hddv in serializers_hopdongdichvu.data:
+                updated_field = item_hddv.copy()
+                updated_field['chisocu'] = 0
+                updated_field['heso'] = 1
+
+                if hopdongthanhtoan:
+                    thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
+
+                    # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
+                    for item_thanhtoan in thanhtoan_list:
+                        if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
+                            updated_field['heso'] = item_thanhtoan['heso']
+                            if updated_field['id_dichvu'] in list_id_dichvu:
+                                updated_field['chisocu'] = item_thanhtoan['chisomoi']
+
                 updated_data.append(updated_field)
+            
             return Response({
-                "data":updated_data,
+                "data": updated_data,
                 "message": "successfully",
             }, status=status.HTTP_200_OK)
 

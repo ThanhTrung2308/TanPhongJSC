@@ -256,7 +256,6 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             hopdongthanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=param_query).order_by('-id').first()
             serializers_hopdongthanhtoan = ThanhtoanDichvuSerializer(hopdongthanhtoan)
             
-            
             list_id_dichvu = [7, 8, 32, 33, 34] # Danh sách chứa các id cần lưu chỉ số cũ
             updated_data = [] # Tạo một danh sách chứa dữ liệu đã được cập nhật
 
@@ -265,6 +264,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
                 updated_field = item_hddv.copy()
                 updated_field['chisocu'] = 0
                 updated_field['heso'] = 1
+                updated_field['soluong'] = 1
 
                 if hopdongthanhtoan:
                     thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
@@ -272,7 +272,11 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
                     # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
                     for item_thanhtoan in thanhtoan_list:
                         if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
+                            # Cập nhật lại các trường dữ liệu theo kì cũ
                             updated_field['heso'] = item_thanhtoan['heso']
+                            updated_field['soluong'] = item_thanhtoan['sosudung']
+
+                            # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
                             if updated_field['id_dichvu'] in list_id_dichvu:
                                 updated_field['chisocu'] = item_thanhtoan['chisomoi']
 

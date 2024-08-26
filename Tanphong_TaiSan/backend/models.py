@@ -280,8 +280,8 @@ class CtThanhtoanDichvu(models.Model):
     thue = models.FloatField(db_column='Thue', blank=True, null=True)  # Field name made lowercase.
     tiensauthue = models.FloatField(db_column='TienSauThue', blank=True, null=True)  # Field name made lowercase.
     donvitinh = models.CharField(db_column='DonViTinh', blank=True, null=True)  # Field name made lowercase.
-    chisocu = models.IntegerField(db_column='ChiSoCu', blank=True, null=True)  # Field name made lowercase.
-    chisomoi = models.IntegerField(db_column='ChiSoMoi', blank=True, null=True)  # Field name made lowercase.
+    chisocu = models.FloatField(db_column='ChiSoCu', blank=True, null=True)  # Field name made lowercase.
+    chisomoi = models.FloatField(db_column='ChiSoMoi', blank=True, null=True)  # Field name made lowercase.
     heso = models.IntegerField(db_column='HeSo', blank=True, null=True)  # Field name made lowercase.
     dongia = models.FloatField(db_column='DonGia', blank=True, null=True)  # Field name made lowercase.
     sosudung = models.FloatField(db_column='SoSuDung', blank=True, null=True)  # Field name made lowercase.

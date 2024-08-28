@@ -34,7 +34,7 @@ class HopDongSerializer(serializers.ModelSerializer):
         print(validated_data)
         validated_data['trangthai'] = 1
         validated_data['tongthu'] = 0
-        # return super().create(validated_data)
+        return super().create(validated_data)
 
 class LoaiDichVuSerializer(serializers.ModelSerializer):
     class Meta:

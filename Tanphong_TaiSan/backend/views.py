@@ -288,6 +288,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
                 # Cập nhật giá trị chỉ số cũ bằng chỉ số mới từ kỳ thanh toán trước
                 # Điều này giúp chuẩn bị dữ liệu cho kỳ thanh toán mới
                 item['chisocu'] = item['chisomoi'] 
+                item['id_dichvu'] = item['dichvu']
                 item['chisomoi'] = 0
 
             return Response({

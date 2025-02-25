@@ -240,7 +240,6 @@ class HopDongNhaXuongAPIView(generics.GenericAPIView,
         }, status=status.HTTP_200_OK)
 
 
-
 class HopDongDichVu_For_ThanhToanAPIView(APIView):
     def get(self, request):
         # Lấy giá trị tham số query 'id_hopdong' từ URL
@@ -256,34 +255,43 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             hopdongthanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=param_query).order_by('-id').first()
             serializers_hopdongthanhtoan = ThanhtoanDichvuSerializer(hopdongthanhtoan)
             
-            list_id_dichvu = [7, 8, 32, 33, 34] # Danh sách chứa các id cần lưu chỉ số cũ
-            updated_data = [] # Tạo một danh sách chứa dữ liệu đã được cập nhật
+            # list_id_dichvu = [7, 8, 32, 33, 34, 42, 43, 44] # Danh sách chứa các id cần lưu chỉ số cũ
+            # updated_data = [] # Tạo một danh sách chứa dữ liệu đã được cập nhật
 
-            # Duyệt qua từng bản ghi trong danh sách dịch vụ hợp đồng để lắp thông tin chỉ số mới của thanh toán kỳ trước vào chỉ số cũ của kì này
-            for item_hddv in serializers_hopdongdichvu.data:
-                updated_field = item_hddv.copy()
-                updated_field['chisocu'] = 0
-                updated_field['heso'] = 1
-                updated_field['soluong'] = 1
+            # # Duyệt qua từng bản ghi trong danh sách dịch vụ hợp đồng để lắp thông tin chỉ số mới của thanh toán kỳ trước vào chỉ số cũ của kì này
+            # for item_hddv in serializers_hopdongdichvu.data:
+            #     updated_field = item_hddv.copy()
+            #     updated_field['chisocu'] = 0
+            #     updated_field['heso'] = 1
+            #     updated_field['soluong'] = 1
 
-                if hopdongthanhtoan:
-                    thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
+            #     if hopdongthanhtoan:
+            #         thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
 
-                    # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
-                    for item_thanhtoan in thanhtoan_list:
-                        if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
-                            # Cập nhật lại các trường dữ liệu theo kì cũ
-                            updated_field['heso'] = item_thanhtoan['heso']
-                            updated_field['soluong'] = item_thanhtoan['sosudung']
+            #         # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
+            #         for item_thanhtoan in thanhtoan_list:
+            #             if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
+            #                 # Cập nhật lại các trường dữ liệu theo kì cũ
+            #                 updated_field['heso'] = item_thanhtoan['heso']
+            #                 updated_field['soluong'] = item_thanhtoan['sosudung']
 
-                            # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
-                            if updated_field['id_dichvu'] in list_id_dichvu:
-                                updated_field['chisocu'] = item_thanhtoan['chisomoi']
+            #                 # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
+            #                 if updated_field['id_dichvu'] in list_id_dichvu:
+            #                     updated_field['chisocu'] = item_thanhtoan['chisomoi']
 
-                updated_data.append(updated_field)
-            
+            #     updated_data.append(updated_field)
+
+            # Sao chép danh sách thanh toán từ dữ liệu đã được serialize
+            data_thanh_toan = serializers_hopdongthanhtoan.data['thanhtoan'].copy()
+
+            for item in data_thanh_toan:
+                # Cập nhật giá trị chỉ số cũ bằng chỉ số mới từ kỳ thanh toán trước
+                # Điều này giúp chuẩn bị dữ liệu cho kỳ thanh toán mới
+                item['chisocu'] = item['chisomoi'] 
+                item['chisomoi'] = 0
+
             return Response({
-                "data": updated_data,
+                "data": data_thanh_toan,
                 "message": "successfully",
             }, status=status.HTTP_200_OK)
 

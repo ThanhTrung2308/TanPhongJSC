@@ -240,7 +240,6 @@ class HopDongNhaXuongAPIView(generics.GenericAPIView,
         }, status=status.HTTP_200_OK)
 
 
-
 class HopDongDichVu_For_ThanhToanAPIView(APIView):
     def get(self, request):
         # Lấy giá trị tham số query 'id_hopdong' từ URL
@@ -265,7 +264,15 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             #     updated_field['chisocu'] = 0
             #     updated_field['heso'] = 1
             #     updated_field['soluong'] = 1
+            # # Duyệt qua từng bản ghi trong danh sách dịch vụ hợp đồng để lắp thông tin chỉ số mới của thanh toán kỳ trước vào chỉ số cũ của kì này
+            # for item_hddv in serializers_hopdongdichvu.data:
+            #     updated_field = item_hddv.copy()
+            #     updated_field['chisocu'] = 0
+            #     updated_field['heso'] = 1
+            #     updated_field['soluong'] = 1
 
+            #     if hopdongthanhtoan:
+            #         thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
             #     if hopdongthanhtoan:
             #         thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
 
@@ -275,7 +282,16 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             #                 # Cập nhật lại các trường dữ liệu theo kì cũ
             #                 updated_field['heso'] = item_thanhtoan['heso']
             #                 updated_field['soluong'] = item_thanhtoan['sosudung']
+            #         # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
+            #         for item_thanhtoan in thanhtoan_list:
+            #             if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
+            #                 # Cập nhật lại các trường dữ liệu theo kì cũ
+            #                 updated_field['heso'] = item_thanhtoan['heso']
+            #                 updated_field['soluong'] = item_thanhtoan['sosudung']
 
+            #                 # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
+            #                 if updated_field['id_dichvu'] in list_id_dichvu:
+            #                     updated_field['chisocu'] = item_thanhtoan['chisomoi']
             #                 # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
             #                 if updated_field['id_dichvu'] in list_id_dichvu:
             #                     updated_field['chisocu'] = item_thanhtoan['chisomoi']

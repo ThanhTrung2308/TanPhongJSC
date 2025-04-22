@@ -275,7 +275,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             item_moi['soluong'] = item_moi['sosudung']  # Gán số lượng bằng số đã sử dụng
 
             data_ky_moi.append(item_moi)
-        
+
         return Response({
             "data": data_ky_moi,
             "message": "Lấy dữ liệu thành công",

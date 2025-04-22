@@ -242,55 +242,45 @@ class HopDongNhaXuongAPIView(generics.GenericAPIView,
 
 
 class HopDongDichVu_For_ThanhToanAPIView(APIView):
+    """API View xử lý dữ liệu thanh toán dịch vụ từ hợp đồng"""
+    
     def get(self, request):
-        # Lấy giá trị tham số query 'id_hopdong' từ URL
-        param_query = request.GET.get("id_hopdong")
+        """Xử lý GET request để lấy và chuẩn bị dữ liệu thanh toán"""
+        # Lấy id_hopdong từ query params
+        id_hopdong = request.GET.get("id_hopdong")
         
-        # Kiểm tra nếu có tham số id_hopdong trong query
-        if param_query is not None:
-            # Lọc dữ liệu từ bảng HopdongDichvu dựa trên id_hopdong
-            hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=param_query)
-            serializers_hopdongdichvu = HopDongDichVuSerializer(hopdongdichvu, many=True)
-            
-            # Lọc và lấy bản ghi đầu tiên từ bảng ThanhtoanDichvu dựa trên id_hopdong và sắp xếp giảm dần theo id
-            hopdongthanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=param_query).order_by('-id').first()
-            serializers_hopdongthanhtoan = ThanhtoanDichvuSerializer(hopdongthanhtoan)
-            
-            list_id_dichvu = [7, 8, 32, 33, 34] # Danh sách chứa các id cần lưu chỉ số cũ
-            updated_data = [] # Tạo một danh sách chứa dữ liệu đã được cập nhật
-
-            # Duyệt qua từng bản ghi trong danh sách dịch vụ hợp đồng để lắp thông tin chỉ số mới của thanh toán kỳ trước vào chỉ số cũ của kì này
-            for item_hddv in serializers_hopdongdichvu.data:
-                updated_field = item_hddv.copy()
-                updated_field['chisocu'] = 0
-                updated_field['heso'] = 1
-                updated_field['soluong'] = 1
-
-                if hopdongthanhtoan:
-                    thanhtoan_list = serializers_hopdongthanhtoan.data['thanhtoan']
-
-                    # Duyệt qua từng bản ghi trong thanh toán để map dich vụ trong trong hopdongdichvu với thanhtoandichvu
-                    for item_thanhtoan in thanhtoan_list:
-                        if item_hddv['id_dichvu'] == item_thanhtoan['dichvu']:
-                            # Cập nhật lại các trường dữ liệu theo kì cũ
-                            updated_field['heso'] = item_thanhtoan['heso']
-                            updated_field['soluong'] = item_thanhtoan['sosudung']
-
-                            # Nếu các dịch vụ thuộc list_id_dichvu thì sẽ update lại chỉ số cũ
-                            if updated_field['id_dichvu'] in list_id_dichvu:
-                                updated_field['chisocu'] = item_thanhtoan['chisomoi']
-
-                updated_data.append(updated_field)
-            
+        # Kiểm tra id_hopdong
+        if id_hopdong is None:
             return Response({
-                "data": updated_data,
-                "message": "successfully",
-            }, status=status.HTTP_200_OK)
-
+                "data": None,
+                "message": "Thiếu id_hopdong"
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        # Lấy bản ghi thanh toán gần nhất
+        thanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=id_hopdong).order_by('-id').first()
+        if not thanhtoan:
+            return Response({
+                "data": None,
+                "message": f"Không tìm thấy dữ liệu thanh toán cho hợp đồng {id_hopdong}"
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        # Chuyển đổi dữ liệu và chuẩn bị cho kỳ thanh toán mới
+        data_ky_cu = ThanhtoanDichvuSerializer(thanhtoan).data
+        data_ky_moi = []
+        
+        # Xử lý từng mục thanh toán
+        for item in data_ky_cu['thanhtoan']:
+            item_moi = item.copy()
+            item_moi['chisocu'] = item_moi['chisomoi']  # Chỉ số cũ kỳ này = chỉ số mới kỳ trước
+            item_moi['chisomoi'] = None                 # Reset chỉ số mới
+            item_moi['soluong'] = item_moi['sosudung']  # Gán số lượng bằng số đã sử dụng
+            item_moi['id_dichvu'] = item_moi['dichvu'] # Gán id dịch vụ
+            data_ky_moi.append(item_moi)
+        
         return Response({
-            "data": None,
-            "message": "Không có query id" 
-        }, status=status.HTTP_400_BAD_REQUEST)
+            "data": data_ky_moi,
+            "message": "Lấy dữ liệu thành công",
+        }, status=status.HTTP_200_OK)
 
 
 

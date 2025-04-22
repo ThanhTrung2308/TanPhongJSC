@@ -75,6 +75,8 @@ class ThanhtoanDichvuSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         thanhtoan_data = validated_data.pop('thanhtoan')
         for data in thanhtoan_data:
+            data.pop('id_hopdongthanhtoan', None) # Remove the id_hopdongthanhtoan field from each item in thanhtoan_data
+            data.pop('id', None) # Remove the id field from each item in thanhtoan_data
             data['tientruocthue'] = data['dongia'] * data['sosudung'] if data['sosudung'] is not None else validated_data['dongia']
             data['thue'] = data['tientruocthue'] * data['loaithue']/100
             data['tiensauthue'] = data['tientruocthue'] + data['thue']

@@ -256,13 +256,17 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
                 "message": "Thiếu id_hopdong"
             }, status=status.HTTP_400_BAD_REQUEST)
             
-        # Lấy bản ghi thanh toán gần nhất
+        # Lấy bản ghi thanh toán gần nhất & hợp đồng dịch vụ
         thanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=id_hopdong).order_by('-id').first()
+        hopdongdichvu = HopdongDichvu.objects.filter(id_hopdong=id_hopdong)
+
         if not thanhtoan:
+            data_hopdong = HopDongDichVuSerializer(hopdongdichvu, many=True).data
+
             return Response({
-                "data": [],
+                "data": data_hopdong,
                 "message": f"Không tìm thấy dữ liệu thanh toán cho hợp đồng {id_hopdong}"
-            }, status=status.HTTP_404_NOT_FOUND)
+            }, status=status.HTTP_204_NO_CONTENT)
         
         # Chuyển đổi dữ liệu và chuẩn bị cho kỳ thanh toán mới
         data_ky_cu = ThanhtoanDichvuSerializer(thanhtoan).data

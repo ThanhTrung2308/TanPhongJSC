@@ -266,7 +266,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
             return Response({
                 "data": data_hopdong,
                 "message": f"Không tìm thấy dữ liệu thanh toán cho hợp đồng {id_hopdong}"
-            }, status=status.HTTP_204_NO_CONTENT)
+            }, status=status.HTTP_200_OK)
         
         # Chuyển đổi dữ liệu và chuẩn bị cho kỳ thanh toán mới
         data_ky_cu = ThanhtoanDichvuSerializer(thanhtoan).data

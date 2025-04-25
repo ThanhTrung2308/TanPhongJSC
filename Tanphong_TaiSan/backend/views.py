@@ -260,7 +260,7 @@ class HopDongDichVu_For_ThanhToanAPIView(APIView):
         thanhtoan = ThanhtoanDichvu.objects.filter(id_hopdong=id_hopdong).order_by('-id').first()
         if not thanhtoan:
             return Response({
-                "data": None,
+                "data": [],
                 "message": f"Không tìm thấy dữ liệu thanh toán cho hợp đồng {id_hopdong}"
             }, status=status.HTTP_404_NOT_FOUND)
         
